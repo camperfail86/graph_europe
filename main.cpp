@@ -181,23 +181,52 @@ int main() {
     addEdge(europeGraph, "Россия", "Финляндия");
     addEdge(europeGraph, "Россия", "Польша");
 
-    addEdge(europeGraph, "Сан-Марино", "");
+    addEdge(europeGraph, "Сан-Марино", "Италия");
 
-    addEdge(europeGraph, "Сербия", "");
+    addEdge(europeGraph, "Сербия", "Румыния");
+    addEdge(europeGraph, "Сербия", "Болгария");
+    addEdge(europeGraph, "Сербия", "Македония");
+    addEdge(europeGraph, "Сербия", "Албания");
+    addEdge(europeGraph, "Сербия", "Черногория");
+    addEdge(europeGraph, "Сербия", "Босния и Герцеговина");
+    addEdge(europeGraph, "Сербия", "Хорватия");
+    addEdge(europeGraph, "Сербия", "Венгрия");
 
-    addEdge(europeGraph, "Словакия", "");
+    addEdge(europeGraph, "Словакия", "Венгрия");
+    addEdge(europeGraph, "Словакия", "Австрия");
+    addEdge(europeGraph, "Словакия", "Чехия");
+    addEdge(europeGraph, "Словакия", "Польша");
+    addEdge(europeGraph, "Словакия", "Украина");
 
-    addEdge(europeGraph, "Словения", "");
+    addEdge(europeGraph, "Словения", "Италия");
+    addEdge(europeGraph, "Словения", "Австрия");
+    addEdge(europeGraph, "Словения", "Хорватия");
+    addEdge(europeGraph, "Словения", "Венгрия"); // 39
 
-    addEdge(europeGraph, "Испания", "");
+    addEdge(europeGraph, "Испания", "Андорра");
+    addEdge(europeGraph, "Испания", "Португалия");
+    addEdge(europeGraph, "Испания", "Франция");
 
-    addEdge(europeGraph, "Швеция", "");
+    addEdge(europeGraph, "Швеция", "Финляндия");
+    addEdge(europeGraph, "Швеция", "Норвегия");
 
-    addEdge(europeGraph, "Швейцария", "");
+    addEdge(europeGraph, "Швейцария", "Германия");
+    addEdge(europeGraph, "Швейцария", "Франция");
+    addEdge(europeGraph, "Швейцария", "Италия");
+    addEdge(europeGraph, "Швейцария", "Австрия");
+    addEdge(europeGraph, "Швейцария", "Лихтенштейн"); // 42
 
-    addEdge(europeGraph, "Турция", "");
 
-    addEdge(europeGraph, "Украина", "");
+    addEdge(europeGraph, "Турция", "Болгария");
+    addEdge(europeGraph, "Турция", "Греция");
+
+    addEdge(europeGraph, "Украина", "Молдова");
+    addEdge(europeGraph, "Украина", "Румыния");
+    addEdge(europeGraph, "Украина", "Венгрия");
+    addEdge(europeGraph, "Украина", "Словакия");
+    addEdge(europeGraph, "Украина", "Белорусь");
+    addEdge(europeGraph, "Украина", "Польша");
+    addEdge(europeGraph, "Украина", "Россия");
 
     addEdge(europeGraph, "Великобритания", "Ирландия");
 
