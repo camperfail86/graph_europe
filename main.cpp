@@ -1,18 +1,80 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-#include <string>
+#include <queue>
 #include <limits>
+#include <algorithm>
+#include <unordered_set>
+
+std::unordered_map<std::string, std::vector<std::string> > europeGraph;
+
+void bronKerbosch(std::unordered_set<std::string>& R, std::unordered_set<std::string>& P, std::unordered_set<std::string>& X,
+                  std::vector<std::string>& clique, std::vector<std::vector<std::string> >& allCliques) {
+    if (P.empty() && X.empty()) {
+        allCliques.push_back(std::vector<std::string>(R.begin(), R.end()));
+        return;
+    }
+
+    std::unordered_set<std::string> P_copy = P;
+    for (const std::string& v : P_copy) {
+        std::unordered_set<std::string> newP, newX;
+        for (const std::string& w : P) {
+            if (std::find(europeGraph[v].begin(), europeGraph[v].end(), w) != europeGraph[v].end()) {
+                newP.insert(w);
+            }
+        }
+        for (const std::string& w : X) {
+            if (std::find(europeGraph[v].begin(), europeGraph[v].end(), w) != europeGraph[v].end()) {
+                newX.insert(w);
+            }
+        }
+
+        R.insert(v);
+        P.erase(v);
+        X.insert(v);
+
+        bronKerbosch(R, newP, newX, clique, allCliques);
+
+        R.erase(v);
+        P.insert(v);
+        X.erase(v);
+    }
+}
 
 void addEdge(std::unordered_map<std::string, std::vector<std::string> >& graph,
              const std::string& country1, const std::string& country2) {
     graph[country1].push_back(country2);
+    graph[country2].push_back(country1);
 }
 
+int bfs(const std::string& start) {
+    std::unordered_map<std::string, int> distances;
+    std::queue<std::string> q;
+
+    q.push(start);
+    distances[start] = 0;
+
+    int max_distance = 0;
+
+    while (!q.empty()) {
+        std::string current = q.front();
+        q.pop();
+
+        for (const std::string& neighbor : europeGraph.at(current)) {
+            if (distances.find(neighbor) == distances.end()) {
+                distances[neighbor] = distances[current] + 1;
+                q.push(neighbor);
+                if (distances[neighbor] > max_distance) {
+                    max_distance = distances[neighbor];
+                }
+            }
+        }
+    }
+
+    return max_distance;
+}
 
 int main() {
-    std::unordered_map<std::string, std::vector<std::string> > europeGraph;
-
     addEdge(europeGraph, "Албания", "Македония");
     addEdge(europeGraph, "Албания", "Сербия");
     addEdge(europeGraph, "Албания", "Черногория");
@@ -106,7 +168,7 @@ int main() {
 
     // Исландия
 
-    addEdge(europeGraph, "Ирландия", "Великобритания");
+    // addEdge(europeGraph, "Ирландия", "Великобритания");
 
     addEdge(europeGraph, "Италия", "Сан-Марино");
     addEdge(europeGraph, "Италия", "Ватикан");
@@ -228,9 +290,57 @@ int main() {
     addEdge(europeGraph, "Украина", "Польша");
     addEdge(europeGraph, "Украина", "Россия");
 
-    addEdge(europeGraph, "Великобритания", "Ирландия");
+    // addEdge(europeGraph, "Великобритания", "Ирландия");
 
     addEdge(europeGraph, "Ватикан", "Италия"); // 46
 
+    std::unordered_map<std::string, int> eccentricities;
+
+    for (const auto& pair : europeGraph) {
+        const std::string& country = pair.first;
+        eccentricities[country] = bfs(country);
+    }
+
+    int rad = 10000;
+    std::string rad_str;
+    int diam = 0;
+    std::string diam_str;
+    for (const auto& pair : eccentricities) {
+        if (pair.second <= rad) {
+            rad = pair.second;
+            rad_str = pair.first;
+        }
+        if (pair.second >= diam) {
+            diam = pair.second;
+            diam_str = pair.first;
+        }
+    }
+
+    std::cout << "Радиус: " << rad << " " << rad_str << std::endl;
+    std::cout << "Диаметр: " << diam << " " << diam_str << std::endl;
+
+        std::unordered_set<std::string> R, P, X;
+    for (const auto& pair : europeGraph) {
+        P.insert(pair.first);
+    }
+
+    std::vector<std::string> clique;
+    std::vector<std::vector<std::string> > allCliques;
+    bronKerbosch(R, P, X, clique, allCliques);
+
+    std::vector<std::string> maxClique;
+    for (const auto& clique : allCliques) {
+        if (clique.size() > maxClique.size()) {
+            maxClique = clique;
+        }
+    }
+
+    std::cout << "Максимальная клика: ";
+    for (const std::string& country : maxClique) {
+        std::cout << country << " ";
+    }
+    std::cout << std::endl;
+
     return 0;
 }
+
