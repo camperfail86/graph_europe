@@ -74,6 +74,57 @@ int bfs(const std::string& start) {
     return max_distance;
 }
 
+
+bool isSafe(const std::unordered_map<std::string, std::vector<std::string> >& graph,
+            const std::unordered_map<std::string, int>& color, const std::string& country, int c) {
+    for (const auto& neighbor : graph.at(country)) {
+        if (color.at(neighbor) == c) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool graphColoringUtil(const std::unordered_map<std::string, std::vector<std::string> >& graph,
+                        std::unordered_map<std::string, int>& color, int m, int index, const std::vector<std::string>& countries) {
+    if (index == countries.size()) {
+        return true;
+    }
+
+    for (int c = 1; c <= m; c++) {
+        if (isSafe(graph, color, countries[index], c)) {
+            color[countries[index]] = c;
+            if (graphColoringUtil(graph, color, m, index + 1, countries)) {
+                return true;
+            }
+            color[countries[index]] = 0;
+        }
+    }
+    return false;
+}
+
+int findChromaticNumber(const std::unordered_map<std::string, std::vector<std::string> >& graph) {
+    std::vector<std::string> countries;
+    for (const auto& pair : graph) {
+        countries.push_back(pair.first);
+    }
+
+    std::unordered_map<std::string, int> color;
+    for (const auto& country : countries) {
+        color[country] = 0;
+    }
+
+    int m = countries.size();
+    for (int i = 1; i <= m; i++) {
+        if (graphColoringUtil(graph, color, i, 0, countries)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
 int main() {
     addEdge(europeGraph, "Албания", "Македония");
     addEdge(europeGraph, "Албания", "Сербия");
@@ -319,7 +370,7 @@ int main() {
     std::cout << "Радиус: " << rad << " " << rad_str << std::endl;
     std::cout << "Диаметр: " << diam << " " << diam_str << std::endl;
 
-        std::unordered_set<std::string> R, P, X;
+    std::unordered_set<std::string> R, P, X;
     for (const auto& pair : europeGraph) {
         P.insert(pair.first);
     }
@@ -340,6 +391,9 @@ int main() {
         std::cout << country << " ";
     }
     std::cout << std::endl;
+
+    int chromaticNumber = findChromaticNumber(europeGraph);
+    std::cout << "Хроматическое число графа: " << chromaticNumber << std::endl;
 
     return 0;
 }
